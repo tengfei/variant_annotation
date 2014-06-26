@@ -1,0 +1,133 @@
+[
+  {
+    "schema": {
+      "inputs": [
+        {
+          "description": "bgziped vcf file with .gz extension", 
+          "id": "inp_gz", 
+          "list": false, 
+          "name": "bgziped vcf", 
+          "required": true, 
+          "types": []
+        }
+      ], 
+      "outputs": [
+        {
+          "description": "summary counts for given genomics features", 
+          "id": "table", 
+          "list": true, 
+          "name": "variant summary table", 
+          "required": false, 
+          "types": "text"
+        }
+      ], 
+      "params": [
+        {
+          "category": "Reference Options", 
+          "condition": null, 
+          "default": "hg19", 
+          "description": "choose reference genome, now we only support hg18, hg19", 
+          "id": "genome", 
+          "list": false, 
+          "name": "reference genome", 
+          "required": false, 
+          "type": "enum", 
+          "values": [
+            [
+              "hg19", 
+              "hg19", 
+              "Hg19"
+            ], 
+            [
+              "hg18", 
+              "hg18", 
+              "Hg18"
+            ]
+          ]
+        }, 
+        {
+          "category": "Location options", 
+          "condition": null, 
+          "default": "all", 
+          "description": "Choose locations you want to compute summary", 
+          "id": "location", 
+          "list": false, 
+          "name": "Location", 
+          "required": false, 
+          "type": "enum", 
+          "values": [
+            [
+              "all", 
+              "including coding, 3 and 5 UTR, intron, integenic, spliceSite and promoter", 
+              "All"
+            ], 
+            [
+              "coding", 
+              "falls within a coding region", 
+              "Coding"
+            ], 
+            [
+              "fiveUTR", 
+              "falls within a 5 untranslated region", 
+              "Fiveutr"
+            ], 
+            [
+              "threeUTR", 
+              "falls within a 3 untranslated region", 
+              "Threeutr"
+            ], 
+            [
+              "intron", 
+              "falls within an intron region", 
+              "Intron"
+            ], 
+            [
+              "intergenic", 
+              "does not fall within a transcript associated with a gene", 
+              "Intergenic"
+            ], 
+            [
+              "splicSite", 
+              "overlaps any portion of the first 2 or last 2 nucleotides of an intron", 
+              "Splicsite"
+            ], 
+            [
+              "promoter", 
+              "falls within a promoter region of a transcript", 
+              "Promoter"
+            ]
+          ]
+        }, 
+        {
+          "category": "Location extestion options", 
+          "condition": null, 
+          "default": 0, 
+          "description": "Integer value to specify upstream of given category, promoter or intergenic region", 
+          "id": "upstream", 
+          "list": false, 
+          "max": null, 
+          "min": null, 
+          "name": "upstream", 
+          "required": false, 
+          "step": null, 
+          "type": "integer"
+        }, 
+        {
+          "category": "Location extestion options", 
+          "condition": null, 
+          "default": 0, 
+          "description": "Integer value to specify downstream of given category, promoter or intergenic region", 
+          "id": "downstream", 
+          "list": false, 
+          "max": null, 
+          "min": null, 
+          "name": "downstream", 
+          "required": false, 
+          "step": null, 
+          "type": "integer"
+        }
+      ]
+    }, 
+    "wrapper_id": "variant_annotation.LocateVariants.LocateVariants"
+  }
+]
