@@ -1,20 +1,10 @@
 import os
-from sbgsdk import Process, define
+from sbgsdk import Process, define, require
 from sbgsdk.file_utils import insert_suffix
 
 
+@require(mem_mb=4*1024, cpu=require.CPU_LOW)
 class LocateVariants(define.Wrapper):
-    Meta = dict(
-        name = "Variant Annotation",
-        description = "Using bioc variant annotation and analysis packages to explore our varaints data",
-        version = "0.1.0",
-        categories = "",
-        toolkit = "",
-        toolkit_version = "",
-        licenses = ['GPLv3'],
-        resources = dict(memory_gb=4, cpu='LOW', io='HIGH')
-        )
-
     class Inputs(define.Inputs):
         inp_gz = define.input(
             name = "bgziped vcf",
@@ -29,7 +19,7 @@ class LocateVariants(define.Wrapper):
             name = "variant summary table",
             description = "summary counts for given genomics features",
             file_types = "text",
-            list = True
+            list = False
             )
 
     class Params(define.Params):
@@ -75,23 +65,19 @@ class LocateVariants(define.Wrapper):
     def execute(self):
         inputs, outputs, params = self.inputs, self.outputs, self.params
 
-        output_dir = "locateVariant"
-
-
         ## outputs
         out_dir = 'locate_variant_summary'
         os.makedirs(out_dir)
-
-        table = outputs.table
-        table.file =  out_dir + 'table.txt'
-        ## table.meta = inputs.sam.make_metadata(file_type='text')
+        # Have to assign to outputs object!
+        table = self.outputs.table = os.path.join(out_dir, 'table.txt')
+        table.meta = inputs.inp_gz.make_metadata(file_type='text')
 
 
         ## command line
-        proc = Process("Rscript", stdout = table.file)
+        script_path = os.path.join(os.path.dirname(__file__), 'locateVariants.R')  
+        proc = Process("Rscript", stdout=table)
         proc.add_arg('--default-packages=VariantAnnotation')
         proc.add_arg('--vanilla')
-        script_path = '/sbgenomics/variant_annotation/locateVariants.R'
         proc.add_arg(script_path)
         proc.add_arg(inputs.inp_gz)
         proc.add_arg(params.genome)
